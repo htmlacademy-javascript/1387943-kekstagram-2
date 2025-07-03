@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
-* Студент: [Виктория Радченко](https://up.htmlacademy.ru/javascript-individual/2/user/1387943).
-* Наставник: `Неизвестно`.
+* Студент: [Виктория](https://up.htmlacademy.ru/javascript-individual/2/user/1387943).
+* Наставник: `Виктория Никитина`.
 
 ---
 

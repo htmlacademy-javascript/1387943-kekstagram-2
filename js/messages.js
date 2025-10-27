@@ -4,16 +4,14 @@ const SHOW_GET_DATA_ERROR_TIME = 5000;
 const dataErrorMessage = document.querySelector('#data-error').content.querySelector('.data-error');
 const successMessage = document.querySelector('#success').content.querySelector('.success');
 const errorMessage = document.querySelector('#error').content.querySelector('.error');
-const successButton = successMessage.querySelector('.success__button');
-const errorButton = errorMessage.querySelector('.error__button');
 
 // ошибка загрузки данных с сервера
 const showGetDataError = () => {
   document.body.appendChild(dataErrorMessage);
 
-  setTimeout(() =>{
+  setTimeout(() => {
     dataErrorMessage.remove();
-  },SHOW_GET_DATA_ERROR_TIME);
+  }, SHOW_GET_DATA_ERROR_TIME);
 };
 
 // показ сообщения об успешной отправке формы
@@ -27,9 +25,11 @@ const showPostSucsessMessage = () => {
   document.addEventListener('keydown', closeUploadSuccessMessageByEsc);
 };
 
-successButton.addEventListener('click', () => {
-  successMessage.remove();
-  document.removeEventListener('keydown', closeUploadSuccessMessageByEsc);
+successMessage.addEventListener('click', ({ target }) => {
+  if (target.classList.contains('success') || target.classList.contains('success__button')) {
+    successMessage.remove();
+    document.removeEventListener('keydown', closeUploadSuccessMessageByEsc);
+  }
 });
 
 // показ сообщения об ошибке при отправке формы
@@ -43,9 +43,11 @@ const showPostErrorMessage = () => {
   document.addEventListener('keydown', closeUploadErrorMessageByEsc);
 };
 
-errorButton.addEventListener('click', () => {
-  errorMessage.remove();
-  document.removeEventListener('keydown', closeUploadSuccessMessageByEsc);
+errorMessage.addEventListener('click', ({ target }) => {
+  if (target.classList.contains('error') || target.classList.contains('error__button')) {
+    errorMessage.remove();
+    document.removeEventListener('keydown', closeUploadSuccessMessageByEsc);
+  }
 });
 
-export {showGetDataError, showPostSucsessMessage, showPostErrorMessage };
+export { showGetDataError, showPostSucsessMessage, showPostErrorMessage };

@@ -24,7 +24,7 @@ const noneFilterItem = document.querySelector('#effect-none');
 const plusScaleButton = document.querySelector('.scale__control--bigger');
 const minusScaleButton = document.querySelector('.scale__control--smaller');
 const scale = document.querySelector('.scale__control--value');
-const photoPreview = document.querySelector('.img-upload__preview');
+const photoPreview = document.querySelector('.img-upload__preview img');
 const submitButton = document.querySelector('.img-upload__submit');
 const photoPreviewImg = document.querySelector('.img-upload__preview img');
 const effectsPreviewIcons = document.querySelectorAll('.effects__preview');
@@ -47,6 +47,7 @@ const clearFormData = () => {
   imgPreviewStartSettings();
   scale.value = `${100}%`;
   photoPreview.style.transform = `scale(${scale.value})`;
+  resetValidation();
 };
 
 const closeUploadModal = () => {
@@ -61,7 +62,9 @@ const closeUploadModal = () => {
 function onDocumentEscKeyDown(evt) {
   if (isEscapeKey(evt) && !isFieldFocused()) {
     evt.preventDefault();
-    closeUploadModal();
+    if (!document.querySelector('.error')) {
+      closeUploadModal();
+    }
   }
 }
 
@@ -78,7 +81,7 @@ const setLoadedPhotoPreview = () => {
     photoPreviewImg.src = filePath;
 
     effectsPreviewIcons.forEach((icon) => {
-      icon.style.backgroundImage = `url(${ filePath })`;
+      icon.style.backgroundImage = `url(${filePath})`;
     });
   }
 };
@@ -103,40 +106,36 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
+function resetValidation() {
+  pristine.reset();
+}
+
 // проверка количества хэштегов:
 const checkHashtagsArrayLength = (value) => {
-  const hashtagsArray = value.trim().split(' ');
-
+  if (!value.trim().length) {
+    return true;
+  }
+  const hashtagsArray = value.trim().toLowerCase().split(' ').filter((item) => item.length);
   return hashtagsArray.length === 0 || hashtagsArray.length <= MAX_HASHTAGS_COUNT;
 };
 
 // проверка повторяющихся хэштегов:
 const checkHashtagsRepeat = (value) => {
-  const hashtagsArray = value.trim().split(' ');
-
-  const modifiedHashtagArray = hashtagsArray.map((hashtag) => {
-    const modifiedHashtag = hashtag.replaceAll(' ', '').toLowerCase();
-    return modifiedHashtag;
-  });
-
-  for (let i = 0; i < modifiedHashtagArray.length; i++) {
-    if (modifiedHashtagArray.length === 1) {
-      return true;
-    } else {
-      return modifiedHashtagArray.every((element) => element !== modifiedHashtagArray[i]);
-    }
+  if (!value.trim().length) {
+    return true;
   }
+  const hashtagsArray = value.trim().toLowerCase().split(' ').filter((item) => item.length);
+  const uniques = [...new Set(hashtagsArray)];
+  return hashtagsArray.length === uniques.length;
 };
 
 // проверка корректности введения символов хэштега:
 const checkHashtagsRegister = (value) => {
-  const hashtagsArray = value.trim().split(' ');
-
-  if (value === '') {
+  if (value.trim() === '') {
     return true;
-  } else {
-    return hashtagsArray.every((element) => HASHTAGS_REGEXP.test(element));
   }
+  const hashtagsArray = value.trim().toLowerCase().split(' ').filter((item) => item.length);
+  return hashtagsArray.every((element) => HASHTAGS_REGEXP.test(element));
 };
 
 // проверка длины комментария:

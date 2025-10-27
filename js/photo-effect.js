@@ -33,7 +33,7 @@ const effectsSettings = {
   },
   heat: {
     effect: 'brightness',
-    min: 0,
+    min: 1,
     max: 3,
     step: 0.1,
     type: '',
@@ -44,7 +44,7 @@ const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevel = document.querySelector('.effect-level__value');
 const imgEffectLevel = document.querySelector('.img-upload__effect-level');
 const effectItemInputs = document.querySelectorAll('.effects__radio');
-const photoPreview = document.querySelector('.img-upload__preview');
+const photoPreview = document.querySelector('.img-upload__preview img');
 
 // функция для базовых настроек, необходимых для дальнейшего отображения слайдера и превью фото
 const imgPreviewStartSettings = () => {

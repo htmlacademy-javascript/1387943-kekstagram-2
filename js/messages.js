@@ -1,3 +1,5 @@
+import { isEscapeKey } from './util.js';
+
 // вывод и закрытие окон об ошибке или сообщения об успешной отправке формы
 const SHOW_GET_DATA_ERROR_TIME = 5000;
 
@@ -15,39 +17,46 @@ const showGetDataError = () => {
 };
 
 // показ сообщения об успешной отправке формы
-const closeUploadSuccessMessageByEsc = (evt) => {
-  evt.preventDefault();
-  successMessage.remove();
+const onSuccessDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    document.querySelector('.success').remove();
+    document.removeEventListener('keydown', onSuccessDocumentKeydown);
+  }
 };
 
 const showPostSucsessMessage = () => {
-  document.body.appendChild(successMessage);
-  document.addEventListener('keydown', closeUploadSuccessMessageByEsc);
+  const newSuccessMessage = successMessage.cloneNode(true);
+  document.body.append(newSuccessMessage);
+  document.addEventListener('keydown', onSuccessDocumentKeydown);
+  newSuccessMessage.addEventListener('click', ({ target }) => {
+    if (target.classList.contains('success') || target.classList.contains('success__button')) {
+      newSuccessMessage.remove();
+      document.removeEventListener('keydown', onSuccessDocumentKeydown);
+    }
+  });
 };
 
-successMessage.addEventListener('click', ({ target }) => {
-  if (target.classList.contains('success') || target.classList.contains('success__button')) {
-    successMessage.remove();
-    document.removeEventListener('keydown', closeUploadSuccessMessageByEsc);
-  }
-});
-
 // показ сообщения об ошибке при отправке формы
-const closeUploadErrorMessageByEsc = (evt) => {
-  evt.preventDefault();
-  errorMessage.remove();
+const onErrorDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    document.querySelector('.error').remove();
+    document.removeEventListener('keydown', onErrorDocumentKeydown);
+  }
 };
 
 const showPostErrorMessage = () => {
-  document.body.appendChild(errorMessage);
-  document.addEventListener('keydown', closeUploadErrorMessageByEsc);
-};
+  const newPopup = errorMessage.cloneNode(true);
+  document.body.append(newPopup);
+  document.addEventListener('keydown', onErrorDocumentKeydown);
 
-errorMessage.addEventListener('click', ({ target }) => {
-  if (target.classList.contains('error') || target.classList.contains('error__button')) {
-    errorMessage.remove();
-    document.removeEventListener('keydown', closeUploadSuccessMessageByEsc);
-  }
-});
+  newPopup.addEventListener('click', ({ target }) => {
+    if (target.classList.contains('error') || target.classList.contains('error__button')) {
+      newPopup.remove();
+      document.removeEventListener('keydown', onSuccessDocumentKeydown);
+    }
+  });
+};
 
 export { showGetDataError, showPostSucsessMessage, showPostErrorMessage };

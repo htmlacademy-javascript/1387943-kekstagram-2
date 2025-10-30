@@ -1,4 +1,5 @@
 const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
+
 const route = {
   GET_DATA: '/data',
   SEND_DATA: '/',
@@ -18,7 +19,7 @@ const sendData = (onSuccess, onFail, body) => {
     if (response.ok) {
       onSuccess();
     } else {
-      throw new Error(onFail());
+      throw new Error('Error');
     }
   })
     .catch(() => {
